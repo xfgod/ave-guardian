@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "updated_at": null,
+  "watchlist": [],
+  "alerts": {
+    "max_open_alerts": 10,
+    "rules": []
+  },
+  "strategies": [],
+  "context": {
+    "last_analysis_token": null,
+    "last_analysis_chain": null,
+    "recent_queries": [],
+    "active_wss_subscriptions": []
+  },
+  "scan_state": {
+    "last_meme_scan": null,
+    "last_whale_scan": null,
+    "meme_scan_interval_minutes": 30,
+    "whale_scan_interval_minutes": 15
+  }
+}
