@@ -54,19 +54,25 @@
 
 包含：watchlist（关注列表）、alerts（警报规则）、strategies（策略配置）、scan_state（扫描状态）
 
-## 定时任务
+## 定时监控（Cron）
 
-| 任务 | 频率 | 功能 |
-|------|------|------|
-| meme_scanner | 每 30 分钟 | 扫描 Meme 平台标签，发现早期爆发信号 |
-| whale_watcher | 每 15 分钟 | 对 watchlist 币运行庄家行为检测 |
-| liquidity_check | 每 2 小时 | 检测 TVL 骤降等流动性异常 |
+通过 OpenClaw 内置 Cron 系统自动运行，支持多渠道推送：
+
+| 任务 | 频率 | 功能 | 推送 |
+|------|------|------|------|
+| Meme Scanner | 每 30 分钟 | 扫描 Meme 平台标签，发现早期爆发信号 | 主动推送 |
+| Whale Watcher | 每 15 分钟 | 对 watchlist 币运行庄家行为检测 | 主动推送 |
+| Strategy & Alert | 每 5 分钟 | 检查策略触发和异常警报 | 主动推送 |
+
+推送渠道由 OpenClaw 的 `delivery` 配置决定，默认发送到用户最近的活跃渠道（支持微信 / Telegram 等）。
 
 ## 文档
 
-- [SKILL.md](./SKILL.md) — 完整设计文档（含架构、算法、对话流程）
-- [references/algorithms.md](./references/algorithms.md) — 评分算法详细说明
-- [examples/conversation_examples.md](./examples/conversation_examples.md) — 完整对话示例
+- [SKILL.md](./SKILL.md) — 135行入口文档
+- [docs/README.md](./docs/README.md) — 完整功能文档
+- [docs/ALGORITHMS.md](./docs/ALGORITHMS.md) — 评分算法详解
+- [docs/CONVERSATIONS.md](./docs/CONVERSATIONS.md) — 对话示例
+- [docs/ALERTS.md](./docs/ALERTS.md) — 推送模板
 
 ## 架构
 
@@ -97,5 +103,5 @@
 - **API**：AVE Cloud API（Data REST + Data WSS + Trade Proxy）
 - **脚本语言**：Python 3 + Bash
 - **状态存储**：JSON 文件（`jq` 操作）
-- **定时任务**：OpenClaw Cron
-- **推送通道**：微信（OpenClaw WeChat Channel）
+- **定时任务**：OpenClaw Cron（自动调度 + 多渠道推送）
+- **推送通道**：微信 / Telegram / Discord 等（通过 OpenClaw delivery 配置）

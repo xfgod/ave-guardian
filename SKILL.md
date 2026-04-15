@@ -9,7 +9,7 @@ description: |
   2. Meme & Narrative Scanner — scans platform tags and on-chain momentum to
      discover early-stage meme coin signals before they explode.
   3. Anomaly Alert Engine — monitors watchlist tokens in real-time via WSS and
-     pushes WeChat notifications when thresholds are breached.
+     pushes channel notifications when thresholds are breached.
   4. Strategy Executor — converts natural-language trading strategies into AVE
      limit orders + TP/SL; fires automatically when conditions are met.
   5. Token Health Reporter — generates a structured risk/contract/holder/liquidity
