@@ -617,6 +617,8 @@ ALERT_TYPES = {
     "buy_sell_ratio",     # 买卖比异常
     "new_holder_surge",   # 新地址激增
     "whale_accumulation", # 鲸鱼吸筹
+    "price_above",       # 价格向上突破
+    "price_below",       # 价格向下突破
 }
 
 

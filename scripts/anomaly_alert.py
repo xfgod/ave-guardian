@@ -55,6 +55,8 @@ ALERT_TYPE_LIQUIDITY_DROP = "liquidity_drop"
 ALERT_TYPE_BUY_SELL_RATIO = "buy_sell_ratio"
 ALERT_TYPE_WHALE_ACCUMULATION = "whale_accumulation"
 ALERT_TYPE_NEW_HOLDER_SURGE = "new_holder_surge"
+ALERT_TYPE_PRICE_ABOVE = "price_above"
+ALERT_TYPE_PRICE_BELOW = "price_below"
 
 # 所有警报类型
 ALL_ALERT_TYPES = {
@@ -64,6 +66,8 @@ ALL_ALERT_TYPES = {
     ALERT_TYPE_BUY_SELL_RATIO,
     ALERT_TYPE_WHALE_ACCUMULATION,
     ALERT_TYPE_NEW_HOLDER_SURGE,
+    ALERT_TYPE_PRICE_ABOVE,
+    ALERT_TYPE_PRICE_BELOW,
 }
 
 # 默认冷却时间（分钟）
@@ -543,6 +547,56 @@ def check_whale_accumulation(
 
 # ============================================================
 # 警报检查主流程
+
+
+def check_price_above(
+    token: str,
+    chain: str,
+    threshold_usd: float
+) -> dict:
+    """
+    检测价格是否向上突破指定阈值。
+    """
+    token_detail = get_token_detail_for_alert(token, chain)
+    if not token_detail:
+        return {"triggered": False, "error": "Failed to get token detail"}
+
+    current_price = token_detail.get("current_price_usd", 0)
+    triggered = current_price >= threshold_usd
+
+    return {
+        "triggered": triggered,
+        "current_price": current_price,
+        "threshold": threshold_usd,
+        "summary": f"价格 ${current_price:.4f} {'>=' if triggered else '<'} 阈值 ${threshold_usd}"
+    }
+
+
+def check_price_below(
+    token: str,
+    chain: str,
+    threshold_usd: float
+) -> dict:
+    """
+    检测价格是否向下突破指定阈值。
+    """
+    token_detail = get_token_detail_for_alert(token, chain)
+    if not token_detail:
+        return {"triggered": False, "error": "Failed to get token detail"}
+
+    current_price = token_detail.get("current_price_usd", 0)
+    triggered = current_price <= threshold_usd
+
+    return {
+        "triggered": triggered,
+        "current_price": current_price,
+        "threshold": threshold_usd,
+        "summary": f"价格 ${current_price:.4f} {'<=' if triggered else '>'} 阈值 ${threshold_usd}"
+    }
+
+
+# ============================================================
+# 警报检测函数映射
 # ============================================================
 
 CHECKER_MAP = {
@@ -551,6 +605,8 @@ CHECKER_MAP = {
     ALERT_TYPE_LIQUIDITY_DROP: check_liquidity_drop,
     ALERT_TYPE_BUY_SELL_RATIO: check_buy_sell_ratio,
     ALERT_TYPE_WHALE_ACCUMULATION: check_whale_accumulation,
+    ALERT_TYPE_PRICE_ABOVE: check_price_above,
+    ALERT_TYPE_PRICE_BELOW: check_price_below,
 }
 
 
@@ -606,6 +662,16 @@ def check_alert_rule(rule: dict) -> dict:
                 token, chain,
                 threshold_usd=rule.get("threshold_usd", 10000),
                 window_hours=24
+            )
+        elif alert_type == ALERT_TYPE_PRICE_ABOVE:
+            result = checker(
+                token, chain,
+                threshold_usd=rule.get("threshold_usd", 0)
+            )
+        elif alert_type == ALERT_TYPE_PRICE_BELOW:
+            result = checker(
+                token, chain,
+                threshold_usd=rule.get("threshold_usd", 0)
             )
         else:
             result = {"triggered": False, "error": f"No checker for {alert_type}"}
