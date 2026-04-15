@@ -88,7 +88,7 @@ EOF
         ↓
    Ave Data REST / WSS / Trade Proxy
         ↓
-   Response Formatter（微信卡片）
+   Response Formatter
 ```
 
 ---
@@ -140,7 +140,7 @@ EOF
 
 ### 模块三：Anomaly Alert Engine（异常警报）
 
-**功能：** 实时监控用户 watchlist，有异常立即推送微信。
+**功能：** 实时监控用户 watchlist，有异常立即推送。
 
 **触发词：** "监控"、"提醒我"、"警报"
 
